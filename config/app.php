@@ -1,4 +1,5 @@
 <?php
+// config/app.php
 /*
 |--------------------------------------------------------------------------
 | Configuración base de la maqueta PWA
@@ -9,7 +10,7 @@
 */
 
 const APP_NAME = 'Dental App';
-const APP_VERSION = '3.6';
+const APP_VERSION = '5.0';
 const APP_THEME_COLOR = '#0ea5b7';
 const APP_THEME_DARK = '#073b46';
 

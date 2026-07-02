@@ -1,14 +1,16 @@
-const CACHE_NAME = 'dental-pwa-shell-v35';
+const CACHE_NAME = 'dental-pwa-shell-v51';
 
 const APP_SHELL = [
-    './',
-    './index.php',
-    './assets/css/app.css',
-    './assets/js/app.js',
-    './assets/js/push.js',
-    './manifest.json',
-    './assets/img/icon-192.png',
-    './assets/img/icon-512.png'
+    '/',
+    '/index.php',
+    '/auth/login.php',
+    '/pages/citas.php',
+    '/assets/css/app.css',
+    '/assets/js/app.js',
+    '/assets/js/push.js',
+    '/manifest.json',
+    '/assets/img/icon-192.png',
+    '/assets/img/icon-512.png'
 ];
 
 self.addEventListener('install', function (event) {
@@ -50,6 +52,11 @@ self.addEventListener('fetch', function (event) {
 
     const requestUrl = new URL(event.request.url);
 
+    if (requestUrl.origin !== self.location.origin) {
+        event.respondWith(fetch(event.request));
+        return;
+    }
+
     if (
         requestUrl.pathname.includes('/api/') ||
         requestUrl.pathname.includes('/vendor/')
@@ -80,7 +87,7 @@ self.addEventListener('fetch', function (event) {
                     }
 
                     if (event.request.mode === 'navigate') {
-                        return caches.match('./index.php');
+                        return caches.match('/index.php');
                     }
 
                     return null;
@@ -93,9 +100,9 @@ self.addEventListener('push', function (event) {
     let data = {
         title: 'Dental App',
         body: 'Tienes una nueva notificación.',
-        url: './index.php',
-        icon: './assets/img/icon-192.png',
-        badge: './assets/img/icon-192.png'
+        url: '/index.php',
+        icon: '/assets/img/icon-192.png',
+        badge: '/assets/img/icon-192.png'
     };
 
     if (event.data) {
@@ -114,29 +121,25 @@ self.addEventListener('push', function (event) {
         }
     }
 
-    const notificationTitle = data.title;
-
-    const notificationOptions = {
-        body: data.body,
-        icon: data.icon,
-        badge: data.badge,
-        vibrate: [100, 50, 100],
-        tag: 'dental-app-notification',
-        renotify: true,
-        data: {
-            url: data.url
-        }
-    };
-
     event.waitUntil(
-        self.registration.showNotification(notificationTitle, notificationOptions)
+        self.registration.showNotification(data.title, {
+            body: data.body,
+            icon: data.icon,
+            badge: data.badge,
+            vibrate: [100, 50, 100],
+            tag: 'dental-app-notification',
+            renotify: true,
+            data: {
+                url: data.url
+            }
+        })
     );
 });
 
 self.addEventListener('notificationclick', function (event) {
     event.notification.close();
 
-    let targetUrl = './index.php';
+    let targetUrl = '/index.php';
 
     if (event.notification.data && event.notification.data.url) {
         targetUrl = event.notification.data.url;

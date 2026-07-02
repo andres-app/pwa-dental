@@ -1,6 +1,13 @@
 <?php
+// includes/header.php
+
 require_once __DIR__ . '/../config/app.php';
+require_once __DIR__ . '/../config/auth.php';
 require_once __DIR__ . '/icons.php';
+
+if (!defined('PWA_PUBLIC_PAGE') || PWA_PUBLIC_PAGE !== true) {
+    requiereLoginPwa();
+}
 
 $pageTitle = $pageTitle ?? APP_NAME;
 $activePage = $activePage ?? 'inicio';
