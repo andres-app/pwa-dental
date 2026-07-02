@@ -9,7 +9,7 @@
 */
 
 const APP_NAME = 'Dental App';
-const APP_VERSION = '3.2';
+const APP_VERSION = '3.6';
 const APP_THEME_COLOR = '#0ea5b7';
 const APP_THEME_DARK = '#073b46';
 
@@ -19,7 +19,7 @@ function appBaseUrl(): string
     $dir = rtrim(str_replace('\\', '/', dirname($script)), '/');
 
     // Si el archivo actual está dentro de /pages, volvemos a la raíz del proyecto.
-    $dir = preg_replace('#/(pages|admin|auth)$#', '', $dir);
+    $dir = preg_replace('#/(pages|admin|auth|api)$#', '', $dir);
 
     if ($dir === '/' || $dir === '.' || $dir === '') {
         return '';
