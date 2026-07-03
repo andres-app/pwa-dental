@@ -137,19 +137,6 @@ if (!function_exists('premiumBottomIcon')) {
             inset 0 0 0 1px rgba(14, 165, 183, .08);
     }
 
-    .premium-bottom-nav__item.is-active:not(.is-center)::after {
-        content: '';
-        position: absolute;
-        bottom: 4px;
-        left: 50%;
-        width: 6px;
-        height: 6px;
-        border-radius: 999px;
-        transform: translateX(-50%);
-        background: #0ea5b7;
-        box-shadow: 0 0 0 4px rgba(14, 165, 183, .12);
-    }
-
     .premium-bottom-nav__item.is-center {
         color: #07102c;
         gap: 5px;
@@ -274,12 +261,6 @@ if (!function_exists('premiumBottomIcon')) {
 
         .premium-bottom-nav__item.is-center .premium-bottom-nav__label {
             font-size: 10px;
-        }
-
-        .premium-bottom-nav__item.is-active:not(.is-center)::after {
-            bottom: 3px;
-            width: 5px;
-            height: 5px;
         }
     }
 
