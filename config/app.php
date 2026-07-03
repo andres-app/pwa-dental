@@ -10,7 +10,7 @@
 */
 
 const APP_NAME = 'Dental App';
-const APP_VERSION = '7.1';
+const APP_VERSION = '8.0';
 const APP_THEME_COLOR = '#0ea5b7';
 const APP_THEME_DARK = '#073b46';
 
