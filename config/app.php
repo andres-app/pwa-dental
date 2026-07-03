@@ -10,7 +10,7 @@
 */
 
 const APP_NAME = 'Dental App';
-const APP_VERSION = '7.0';
+const APP_VERSION = '7.1';
 const APP_THEME_COLOR = '#0ea5b7';
 const APP_THEME_DARK = '#073b46';
 
@@ -74,9 +74,9 @@ function appNavItems(): array
             'url' => appUrl('pages/citas.php'),
             'icon' => 'clipboard',
         ],
-        'mas' => [
+        'perfil' => [
             'label' => 'Perfil',
-            'url' => appUrl('pages/mas.php'),
+            'url' => appUrl('pages/perfil.php'),
             'icon' => 'users',
         ],
     ];

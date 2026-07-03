@@ -54,7 +54,7 @@ $pageTitle = 'Iniciar sesión';
 
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function () {
-            navigator.serviceWorker.register('/service-worker.js?v=54', {
+            navigator.serviceWorker.register('/service-worker.js?v=55', {
                 scope: '/'
             }).catch(function (error) {
                 console.warn('No se pudo registrar el service worker:', error);
