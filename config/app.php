@@ -75,9 +75,9 @@ function appNavItems(): array
             'icon' => 'clipboard',
         ],
         'mas' => [
-            'label' => 'Más',
+            'label' => 'Perfil',
             'url' => appUrl('pages/mas.php'),
-            'icon' => 'grid',
+            'icon' => 'users',
         ],
     ];
 }
