@@ -1,6 +1,6 @@
 <?php
 $pageTitle = 'Perfil';
-$activePage = 'mas';
+$activePage = 'perfil';
 $pageKicker = 'Cuenta y sesión';
 
 require_once __DIR__ . '/../includes/header.php';

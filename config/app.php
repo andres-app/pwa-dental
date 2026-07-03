@@ -10,7 +10,7 @@
 */
 
 const APP_NAME = 'Dental App';
-const APP_VERSION = '8.1';
+const APP_VERSION = '8.5';
 const APP_THEME_COLOR = '#0ea5b7';
 const APP_THEME_DARK = '#073b46';
 
@@ -56,28 +56,33 @@ function appNavItems(): array
     return [
         'inicio' => [
             'label' => 'Inicio',
-            'url' => appUrl('index.php'),
+            'url' => appUrl('pages/inicio.php'),
             'icon' => 'home',
+            'center' => false,
         ],
         'pacientes' => [
             'label' => 'Pacientes',
             'url' => appUrl('pages/pacientes.php'),
             'icon' => 'users',
+            'center' => false,
         ],
-        'agenda' => [
-            'label' => 'Agenda',
-            'url' => appUrl('pages/agenda.php'),
-            'icon' => 'calendar',
+        'nueva_cita' => [
+            'label' => 'Nueva cita',
+            'url' => appUrl('pages/citas.php?accion=nueva'),
+            'icon' => 'plus',
+            'center' => true,
         ],
         'citas' => [
             'label' => 'Citas',
             'url' => appUrl('pages/citas.php'),
-            'icon' => 'clipboard',
+            'icon' => 'calendar',
+            'center' => false,
         ],
         'perfil' => [
             'label' => 'Perfil',
             'url' => appUrl('pages/perfil.php'),
-            'icon' => 'users',
+            'icon' => 'user',
+            'center' => false,
         ],
     ];
 }

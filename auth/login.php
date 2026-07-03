@@ -227,14 +227,14 @@ $pageTitle = 'Iniciar sesión';
             <label class="login-field">
                 <span>Usuario</span>
                 <div class="search-box">
-                    <input type="text" id="usuario" placeholder="Ingresa tu usuario" autocomplete="username" required>
+                    <input type="text" id="usuario" placeholder="Ingresa tu usuario" value="admin@demo.com" autocomplete="username" required>
                 </div>
             </label>
 
             <label class="login-field">
                 <span>Contraseña</span>
                 <div class="search-box">
-                    <input type="password" id="clave" placeholder="Ingresa tu contraseña" autocomplete="current-password" required>
+                    <input type="password" id="clave" value="123123" placeholder="Ingresa tu contraseña" autocomplete="current-password" required>
                 </div>
             </label>
 
@@ -260,7 +260,7 @@ $pageTitle = 'Iniciar sesión';
 
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function () {
-            navigator.serviceWorker.register('/service-worker.js?v=56', {
+            navigator.serviceWorker.register('/service-worker.js?v=58', {
                 scope: '/'
             }).catch(function (error) {
                 console.warn('No se pudo registrar el service worker:', error);
@@ -343,7 +343,7 @@ $pageTitle = 'Iniciar sesión';
             btnLoginText.textContent = 'Acceso confirmado';
 
             window.setTimeout(function () {
-                window.location.replace('/pages/citas.php');
+                window.location.replace('/pages/inicio.php');
             }, 650);
 
         } catch (error) {

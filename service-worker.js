@@ -1,4 +1,4 @@
-const CACHE_NAME = 'dental-pwa-shell-v56';
+const CACHE_NAME = 'dental-pwa-shell-v58';
 
 const STATIC_ASSETS = [
     '/manifest.json',
