@@ -11,7 +11,7 @@ $pageTitle = 'Iniciar sesión';
 <html lang="es">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 
     <meta name="theme-color" content="<?= e(APP_THEME_COLOR) ?>">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -260,7 +260,7 @@ $pageTitle = 'Iniciar sesión';
 
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function () {
-            navigator.serviceWorker.register('/service-worker.js?v=55', {
+            navigator.serviceWorker.register('/service-worker.js?v=56', {
                 scope: '/'
             }).catch(function (error) {
                 console.warn('No se pudo registrar el service worker:', error);
