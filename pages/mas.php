@@ -81,39 +81,6 @@ require_once __DIR__ . '/../includes/header.php';
 
 <section class="section-head">
     <div>
-        <h2>Accesos rápidos</h2>
-        <p>Módulos secundarios de la clínica.</p>
-    </div>
-</section>
-
-<section class="module-grid">
-    <a class="module-card" href="<?= e(appUrl('pages/recordatorios.php')) ?>">
-        <span class="module-icon"><?= appIcon('bell') ?></span>
-        <h3>Recordatorios</h3>
-        <p>Push, WhatsApp y avisos.</p>
-    </a>
-
-    <a class="module-card" href="<?= e(appUrl('pages/historial.php')) ?>">
-        <span class="module-icon"><?= appIcon('heart') ?></span>
-        <h3>Historial</h3>
-        <p>Evolución clínica.</p>
-    </a>
-
-    <a class="module-card" href="<?= e(appUrl('pages/doctores.php')) ?>">
-        <span class="module-icon"><?= appIcon('tooth') ?></span>
-        <h3>Doctores</h3>
-        <p>Equipo profesional.</p>
-    </a>
-
-    <a class="module-card" href="<?= e(appUrl('pages/reportes.php')) ?>">
-        <span class="module-icon"><?= appIcon('chart') ?></span>
-        <h3>Reportes</h3>
-        <p>Indicadores y KPIs.</p>
-    </a>
-</section>
-
-<section class="section-head">
-    <div>
         <h2>Sesión</h2>
         <p>Cierra sesión en este dispositivo.</p>
     </div>

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'dental-pwa-shell-v52';
+const CACHE_NAME = 'dental-pwa-shell-v53';
 
 const STATIC_ASSETS = [
     '/manifest.json',
@@ -28,14 +28,16 @@ self.addEventListener('activate', function (event) {
         caches.keys()
             .then(function (keys) {
                 return Promise.all(
-                    keys
-                        .filter(function (key) {
-                            return key !== CACHE_NAME;
-                        })
-                        .map(function (key) {
-                            return caches.delete(key);
-                        })
+                    keys.map(function (key) {
+                        return caches.delete(key);
+                    })
                 );
+            })
+            .then(function () {
+                return caches.open(CACHE_NAME);
+            })
+            .then(function (cache) {
+                return cache.addAll(STATIC_ASSETS);
             })
             .then(function () {
                 return self.clients.claim();
@@ -52,13 +54,27 @@ self.addEventListener('fetch', function (event) {
 
     /*
     |--------------------------------------------------------------------------
-    | 1. APIs y otros dominios: siempre directo a red
+    | MUY IMPORTANTE PARA SAFARI / iOS
     |--------------------------------------------------------------------------
-    | Ejemplo:
-    | https://app.ortodonciaclinica.pe/api/...
+    | No interceptamos navegación ni páginas PHP.
+    | Así evitamos:
+    | "response served by service worker has redirections"
+    */
+    if (
+        event.request.mode === 'navigate' ||
+        event.request.destination === 'document' ||
+        requestUrl.pathname === '/' ||
+        requestUrl.pathname.endsWith('.php')
+    ) {
+        return;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | No tocar APIs ni otros dominios
+    |--------------------------------------------------------------------------
     */
     if (requestUrl.origin !== self.location.origin) {
-        event.respondWith(fetch(event.request));
         return;
     }
 
@@ -66,44 +82,12 @@ self.addEventListener('fetch', function (event) {
         requestUrl.pathname.includes('/api/') ||
         requestUrl.pathname.includes('/vendor/')
     ) {
-        event.respondWith(fetch(event.request));
         return;
     }
 
     /*
     |--------------------------------------------------------------------------
-    | 2. Páginas PHP: nunca cachear
-    |--------------------------------------------------------------------------
-    | Esto evita el error:
-    | "Response served by service worker has redirections"
-    */
-    if (
-        event.request.mode === 'navigate' ||
-        requestUrl.pathname.endsWith('.php') ||
-        requestUrl.pathname === '/'
-    ) {
-        event.respondWith(
-            fetch(event.request, {
-                cache: 'no-store',
-                redirect: 'follow'
-            }).catch(function () {
-                return new Response(
-                    '<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sin conexión</title></head><body style="font-family:system-ui;padding:24px;"><h1>Sin conexión</h1><p>No se pudo cargar esta pantalla. Verifica tu internet e intenta nuevamente.</p></body></html>',
-                    {
-                        status: 503,
-                        headers: {
-                            'Content-Type': 'text/html; charset=utf-8'
-                        }
-                    }
-                );
-            })
-        );
-        return;
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | 3. Archivos estáticos: cache first
+    | Solo cachear archivos estáticos
     |--------------------------------------------------------------------------
     */
     event.respondWith(
@@ -133,7 +117,7 @@ self.addEventListener('fetch', function (event) {
                 });
             })
             .catch(function () {
-                return null;
+                return fetch(event.request);
             })
     );
 });
