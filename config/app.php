@@ -1,25 +1,43 @@
 <?php
 // config/app.php
+
+declare(strict_types=1);
+
 /*
 |--------------------------------------------------------------------------
-| Configuración base de la maqueta PWA
+| Configuración base de la PWA
 |--------------------------------------------------------------------------
-| No depende de base de datos. Solo controla rutas, nombre y menú.
-| Si tu proyecto está en una subcarpeta, la función appBaseUrl() detecta
-| automáticamente la carpeta raíz cuando las páginas están dentro de /pages.
+| Controla nombre, versión, rutas, tema visual y navegación principal.
 */
 
 const APP_NAME = 'Dental App';
-const APP_VERSION = '8.5';
+const APP_VERSION = '8.6';
+const APP_SW_VERSION = '56';
+
 const APP_THEME_COLOR = '#0ea5b7';
 const APP_THEME_DARK = '#073b46';
+
+/*
+|--------------------------------------------------------------------------
+| Backend principal
+|--------------------------------------------------------------------------
+| La PWA consume APIs desde la app web.
+*/
+
+const APP_BACKEND_URL = 'https://app.ortodonciaclinica.pe';
 
 function appBaseUrl(): string
 {
     $script = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '');
     $dir = rtrim(str_replace('\\', '/', dirname($script)), '/');
 
-    // Si el archivo actual está dentro de /pages, volvemos a la raíz del proyecto.
+    /*
+    |--------------------------------------------------------------------------
+    | Si el archivo actual está dentro de /pages, /auth, /admin o /api,
+    | volvemos a la raíz del proyecto PWA.
+    |--------------------------------------------------------------------------
+    */
+
     $dir = preg_replace('#/(pages|admin|auth|api)$#', '', $dir);
 
     if ($dir === '/' || $dir === '.' || $dir === '') {
@@ -46,7 +64,18 @@ function assetUrl(string $path): string
     return appUrl($path) . '?v=' . rawurlencode(APP_VERSION);
 }
 
-function e(?string $value): string
+function backendUrl(string $path = ''): string
+{
+    $path = ltrim($path, '/');
+
+    if ($path === '') {
+        return APP_BACKEND_URL;
+    }
+
+    return rtrim(APP_BACKEND_URL, '/') . '/' . $path;
+}
+
+function e(mixed $value): string
 {
     return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
 }

@@ -13,6 +13,16 @@ $pageTitle = $pageTitle ?? APP_NAME;
 $activePage = $activePage ?? 'inicio';
 $pageKicker = $pageKicker ?? 'Gestión odontológica';
 $bodyClass = $bodyClass ?? '';
+
+/*
+|--------------------------------------------------------------------------
+| Preloader
+|--------------------------------------------------------------------------
+| Para evitar lag al navegar entre módulos, lo dejamos desactivado por defecto.
+| Si alguna vista lo necesita, puede activar:
+| $showPreloader = true;
+*/
+$showPreloader = $showPreloader ?? false;
 ?>
 <!doctype html>
 <html lang="es">
@@ -24,19 +34,25 @@ $bodyClass = $bodyClass ?? '';
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="<?= e(APP_NAME) ?>">
+
     <title><?= e($pageTitle) ?> · <?= e(APP_NAME) ?></title>
+
     <link rel="manifest" href="<?= e(appUrl('manifest.json')) ?>">
+    <link rel="apple-touch-icon" href="<?= e(appUrl('assets/img/icon-192.png')) ?>">
     <link rel="stylesheet" href="<?= e(assetUrl('assets/css/app.css')) ?>">
 </head>
 
 <body class="app-body <?= e($bodyClass) ?>" data-page="<?= e($activePage) ?>">
-    <div id="appPreloader" class="app-preloader" aria-label="Cargando aplicación">
-        <div class="preloader-card">
-            <div class="preloader-icon"><?= appIcon('tooth') ?></div>
-            <div class="preloader-title">Cargando Dental App</div>
-            <div class="preloader-bar"><span></span></div>
+
+    <?php if ($showPreloader): ?>
+        <div id="appPreloader" class="app-preloader" aria-label="Cargando aplicación">
+            <div class="preloader-card">
+                <div class="preloader-icon"><?= appIcon('tooth') ?></div>
+                <div class="preloader-title">Cargando Dental App</div>
+                <div class="preloader-bar"><span></span></div>
+            </div>
         </div>
-    </div>
+    <?php endif; ?>
 
     <div class="app-shell">
         <header class="app-header">
@@ -45,7 +61,7 @@ $bodyClass = $bodyClass ?? '';
                     <?= appIcon('menu') ?>
                 </button>
 
-                <a class="brand" href="<?= e(appUrl('index.php')) ?>" aria-label="Ir al inicio">
+                <a class="brand" href="<?= e(appUrl('pages/inicio.php')) ?>" aria-label="Ir al inicio">
                     <span class="brand__mark"><?= appIcon('tooth') ?></span>
                     <span class="brand__text">
                         <strong><?= e(APP_NAME) ?></strong>

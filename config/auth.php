@@ -6,59 +6,63 @@ declare(strict_types=1);
 require_once __DIR__ . '/app.php';
 
 const PWA_SESSION_NAME = 'crm_dental_session';
-const PWA_BACKEND_ME_URL = 'https://app.ortodonciaclinica.pe/api/auth/me.php';
 
-function pwaSessionCookie(): string
+function iniciarSesionPwa(): void
 {
-    return (string)($_COOKIE[PWA_SESSION_NAME] ?? '');
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        return;
+    }
+
+    session_name(PWA_SESSION_NAME);
+
+    $https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+        || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https')
+        || (($_SERVER['HTTP_X_FORWARDED_SSL'] ?? '') === 'on');
+
+    if (PHP_VERSION_ID >= 70300) {
+        session_set_cookie_params([
+            'lifetime' => 0,
+            'path' => '/',
+            'domain' => '.ortodonciaclinica.pe',
+            'secure' => $https,
+            'httponly' => true,
+            'samesite' => 'Lax',
+        ]);
+    } else {
+        session_set_cookie_params(0, '/', '.ortodonciaclinica.pe', $https, true);
+    }
+
+    session_start();
 }
 
-function pwaBackendSesionActiva(): bool
+function pwaSesionActiva(): bool
 {
-    $sessionId = pwaSessionCookie();
+    iniciarSesionPwa();
 
-    if ($sessionId === '') {
-        return false;
-    }
-
-    if (!function_exists('curl_init')) {
-        return false;
-    }
-
-    $ch = curl_init(PWA_BACKEND_ME_URL);
-
-    curl_setopt_array($ch, [
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_TIMEOUT => 5,
-        CURLOPT_CONNECTTIMEOUT => 5,
-        CURLOPT_HTTPHEADER => [
-            'Accept: application/json',
-            'Cookie: ' . PWA_SESSION_NAME . '=' . $sessionId,
-        ],
-    ]);
-
-    $response = curl_exec($ch);
-    $status = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-    curl_close($ch);
-
-    if ($status !== 200 || !$response) {
-        return false;
-    }
-
-    $json = json_decode($response, true);
-
-    return is_array($json)
-        && ($json['ok'] ?? false) === true
-        && ($json['logueado'] ?? false) === true;
+    return !empty($_SESSION['id_usuario']) && !empty($_SESSION['id_empresa']);
 }
 
 function requiereLoginPwa(): void
 {
-    if (pwaBackendSesionActiva()) {
+    if (pwaSesionActiva()) {
         return;
     }
 
     header('Location: ' . appUrl('auth/login.php'));
     exit;
+}
+
+function usuarioPwaActual(): array
+{
+    iniciarSesionPwa();
+
+    return [
+        'id_usuario' => (int)($_SESSION['id_usuario'] ?? 0),
+        'id_empresa' => (int)($_SESSION['id_empresa'] ?? 0),
+        'id_sede' => isset($_SESSION['id_sede']) ? (int)$_SESSION['id_sede'] : null,
+        'rol' => (string)($_SESSION['rol'] ?? ''),
+        'nombre_usuario' => (string)($_SESSION['nombre_usuario'] ?? ''),
+        'empresa_nombre' => (string)($_SESSION['empresa_nombre'] ?? ''),
+        'empresa_color' => (string)($_SESSION['empresa_color'] ?? '#00A9B7'),
+    ];
 }

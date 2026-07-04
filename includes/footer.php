@@ -1,4 +1,6 @@
 <?php
+// includes/footer.php
+
 require_once __DIR__ . '/../config/app.php';
 require_once __DIR__ . '/icons.php';
 
@@ -15,8 +17,7 @@ if (!function_exists('premiumBottomIcon')) {
             'users' => '<svg ' . $base . '><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
             'plus' => '<svg ' . $base . '><path d="M12 5v14"/><path d="M5 12h14"/></svg>',
             'calendar' => '<svg ' . $base . '><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18"/></svg>',
-            'user' => '<svg ' . $base . '><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>',
-            'profile' => '<svg ' . $base . '><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>',
+            'user', 'profile' => '<svg ' . $base . '><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>',
             default => appIcon($name),
         };
     }
@@ -108,7 +109,7 @@ if (!function_exists('premiumBottomIcon')) {
         font-weight: 850;
         letter-spacing: -.02em;
         -webkit-tap-highlight-color: transparent;
-        transition: transform .16s ease, color .16s ease, background .16s ease, box-shadow .16s ease;
+        transition: transform .12s ease, color .12s ease, background .12s ease;
     }
 
     .premium-bottom-nav__icon {
@@ -227,7 +228,7 @@ if (!function_exists('premiumBottomIcon')) {
 
         .premium-bottom-nav {
             min-height: 70px;
-            padding: 7px 7px;
+            padding: 7px;
             border-radius: 24px;
             gap: 3px;
         }
@@ -293,27 +294,17 @@ if (!function_exists('premiumBottomIcon')) {
     (function() {
         'use strict';
 
-        const preloader = document.getElementById('appPreloader');
-
-        if (preloader) {
-            window.addEventListener('load', function() {
-                preloader.classList.add('is-hidden');
-
-                window.setTimeout(function() {
-                    preloader.style.display = 'none';
-                }, 350);
-            });
-        }
-
+        /*
+        |--------------------------------------------------------------------------
+        | Service Worker
+        |--------------------------------------------------------------------------
+        | Se registra una sola vez. No usamos preloader en cada vista para evitar lag.
+        */
         if ('serviceWorker' in navigator && !window.__dentalSwRegistered) {
             window.__dentalSwRegistered = true;
 
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/service-worker.js?v=55', {
-                    scope: '/'
-                }).catch(function(error) {
-                    console.warn('No se pudo registrar el service worker:', error);
-                });
+            navigator.serviceWorker.register('/service-worker.js?v=<?= e(APP_SW_VERSION) ?>', {
+                scope: '/'
             });
         }
     })();
