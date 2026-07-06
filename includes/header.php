@@ -42,7 +42,7 @@ $showPreloader = $showPreloader ?? false;
 
     <link rel="manifest" href="<?= e(appUrl('manifest.json')) ?>">
     <link rel="apple-touch-icon" href="<?= e(appUrl('assets/img/icon-192.png')) ?>">
-    <link rel="stylesheet" href="<?= e(assetUrl('assets/css/app.css')) ?>">
+    <link rel="stylesheet" href="<?= e(assetUrl('assets/css/app.css')) ?>?v=<?= e(APP_VERSION) ?>">
 </head>
 
 <body class="app-body <?= e($bodyClass) ?>" data-page="<?= e($activePage) ?>">

@@ -122,10 +122,11 @@ svg {
     backdrop-filter: blur(22px);
     -webkit-backdrop-filter: blur(22px);
 
-    /* Una sola curvatura inferior, sin capas extra */
-    border-bottom-left-radius: 50% 24px;
-    border-bottom-right-radius: 50% 24px;
-    overflow: hidden;
+    /* Header recto, sin curvas inferiores */
+    border-radius: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    overflow: visible;
 }
 
 .app-header::before,
@@ -1160,4 +1161,19 @@ input,
 textarea {
     -webkit-user-select: text;
     user-select: text;
+}
+
+/* ==========================================================================
+   Ajuste final solicitado: header recto
+   ========================================================================== */
+
+.app-header,
+.app-header__inner {
+    border-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+.app-header {
+    overflow: visible !important;
 }
