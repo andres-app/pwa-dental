@@ -1,4 +1,4 @@
-const CACHE_NAME = 'dental-pwa-shell-v58';
+const CACHE_NAME = 'dental-pwa-shell-v93';
 
 const STATIC_ASSETS = [
     '/manifest.json',
@@ -9,17 +9,34 @@ const STATIC_ASSETS = [
     '/assets/img/icon-512.png'
 ];
 
-self.addEventListener('install', function (event) {
-    event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then(function (cache) {
-                return cache.addAll(STATIC_ASSETS);
-            })
-            .catch(function () {
-                return null;
-            })
-    );
+async function safePrecache() {
+    const cache = await caches.open(CACHE_NAME);
 
+    await Promise.allSettled(
+        STATIC_ASSETS.map(async function (asset) {
+            try {
+                const response = await fetch(asset, {
+                    cache: 'reload',
+                    credentials: 'same-origin'
+                });
+
+                if (
+                    response &&
+                    response.ok &&
+                    !response.redirected &&
+                    response.type === 'basic'
+                ) {
+                    await cache.put(asset, response.clone());
+                }
+            } catch (error) {
+                return null;
+            }
+        })
+    );
+}
+
+self.addEventListener('install', function (event) {
+    event.waitUntil(safePrecache());
     self.skipWaiting();
 });
 
@@ -28,16 +45,17 @@ self.addEventListener('activate', function (event) {
         caches.keys()
             .then(function (keys) {
                 return Promise.all(
-                    keys.map(function (key) {
-                        return caches.delete(key);
-                    })
+                    keys
+                        .filter(function (key) {
+                            return key !== CACHE_NAME;
+                        })
+                        .map(function (key) {
+                            return caches.delete(key);
+                        })
                 );
             })
             .then(function () {
-                return caches.open(CACHE_NAME);
-            })
-            .then(function (cache) {
-                return cache.addAll(STATIC_ASSETS);
+                return safePrecache();
             })
             .then(function () {
                 return self.clients.claim();
@@ -46,40 +64,31 @@ self.addEventListener('activate', function (event) {
 });
 
 self.addEventListener('fetch', function (event) {
-    if (event.request.method !== 'GET') {
+    const request = event.request;
+
+    if (request.method !== 'GET') {
         return;
     }
 
-    const requestUrl = new URL(event.request.url);
+    const requestUrl = new URL(request.url);
 
-    /*
-    |--------------------------------------------------------------------------
-    | MUY IMPORTANTE PARA SAFARI / iOS
-    |--------------------------------------------------------------------------
-    | No interceptamos navegación ni páginas PHP.
-    | Así evitamos:
-    | "response served by service worker has redirections"
-    */
-    if (
-        event.request.mode === 'navigate' ||
-        event.request.destination === 'document' ||
-        requestUrl.pathname === '/' ||
-        requestUrl.pathname.endsWith('.php')
-    ) {
-        return;
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | No tocar APIs ni otros dominios
-    |--------------------------------------------------------------------------
-    */
     if (requestUrl.origin !== self.location.origin) {
         return;
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | No interceptar páginas, login, PHP ni APIs
+    |--------------------------------------------------------------------------
+    */
     if (
+        request.mode === 'navigate' ||
+        request.destination === 'document' ||
+        requestUrl.pathname === '/' ||
+        requestUrl.pathname.endsWith('.php') ||
+        requestUrl.pathname.includes('/auth/') ||
         requestUrl.pathname.includes('/api/') ||
+        requestUrl.pathname.includes('/admin/') ||
         requestUrl.pathname.includes('/vendor/')
     ) {
         return;
@@ -87,38 +96,39 @@ self.addEventListener('fetch', function (event) {
 
     /*
     |--------------------------------------------------------------------------
-    | Solo cachear archivos estáticos
+    | Solo manejar archivos estáticos
     |--------------------------------------------------------------------------
     */
     event.respondWith(
-        caches.match(event.request)
-            .then(function (cached) {
-                if (cached) {
-                    return cached;
-                }
-
-                return fetch(event.request).then(function (response) {
+        caches.match(request).then(function (cached) {
+            return fetch(request)
+                .then(function (response) {
                     if (
-                        !response ||
-                        response.status !== 200 ||
-                        response.redirected ||
-                        response.type !== 'basic'
+                        response &&
+                        response.status === 200 &&
+                        !response.redirected &&
+                        response.type === 'basic'
                     ) {
-                        return response;
+                        const responseClone = response.clone();
+
+                        caches.open(CACHE_NAME).then(function (cache) {
+                            cache.put(request, responseClone);
+                        });
                     }
 
-                    const responseClone = response.clone();
-
-                    caches.open(CACHE_NAME).then(function (cache) {
-                        cache.put(event.request, responseClone);
-                    });
-
                     return response;
+                })
+                .catch(function () {
+                    if (cached) {
+                        return cached;
+                    }
+
+                    return new Response('', {
+                        status: 504,
+                        statusText: 'Offline'
+                    });
                 });
-            })
-            .catch(function () {
-                return fetch(event.request);
-            })
+        })
     );
 });
 

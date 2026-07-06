@@ -109,7 +109,6 @@ svg {
 }
 
 /* HEADER */
-
 .app-header {
     position: sticky;
     top: 0;
@@ -117,11 +116,24 @@ svg {
     width: 100%;
     padding-top: var(--safe-top);
     color: var(--ink);
-    background: rgba(255, 255, 255, .9);
+    background: rgba(255, 255, 255, .88);
     border-bottom: 1px solid rgba(219, 231, 239, .78);
     box-shadow: 0 10px 28px rgba(15, 23, 42, .06);
     backdrop-filter: blur(22px);
     -webkit-backdrop-filter: blur(22px);
+
+    /* Una sola curvatura inferior, sin capas extra */
+    border-bottom-left-radius: 50% 24px;
+    border-bottom-right-radius: 50% 24px;
+    overflow: hidden;
+}
+
+.app-header::before,
+.app-header::after,
+.app-header__inner::before,
+.app-header__inner::after {
+    content: none !important;
+    display: none !important;
 }
 
 .app-header__inner {

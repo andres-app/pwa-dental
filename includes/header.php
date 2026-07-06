@@ -29,10 +29,13 @@ $showPreloader = $showPreloader ?? false;
 
 <head>
     <meta charset="utf-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="<?= e(APP_THEME_COLOR) ?>">
+
+    <!-- Notch / barra superior limpia en iPhone -->
+    <meta name="theme-color" content="#ffffff">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="<?= e(APP_NAME) ?>">
 
     <title><?= e($pageTitle) ?> · <?= e(APP_NAME) ?></title>
@@ -57,8 +60,16 @@ $showPreloader = $showPreloader ?? false;
     <div class="app-shell">
         <header class="app-header">
             <div class="app-header__inner">
-                <button class="icon-button" type="button" aria-label="Abrir menú">
-                    <?= appIcon('menu') ?>
+
+                <!-- Espacio reservado del menú eliminado.
+                     Mantiene la posición actual de la marca y la campana. -->
+                <button
+                    class="icon-button"
+                    type="button"
+                    aria-hidden="true"
+                    tabindex="-1"
+                    disabled
+                    style="visibility: hidden; pointer-events: none;">
                 </button>
 
                 <a class="brand" href="<?= e(appUrl('pages/inicio.php')) ?>" aria-label="Ir al inicio">
@@ -73,6 +84,7 @@ $showPreloader = $showPreloader ?? false;
                     <?= appIcon('bell') ?>
                     <span class="notify-dot" aria-hidden="true"></span>
                 </button>
+
             </div>
         </header>
 

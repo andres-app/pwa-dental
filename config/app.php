@@ -11,8 +11,8 @@ declare(strict_types=1);
 */
 
 const APP_NAME = 'Dental App';
-const APP_VERSION = '8.6';
-const APP_SW_VERSION = '56';
+const APP_VERSION = '9.2';
+const APP_SW_VERSION = '93';
 
 const APP_THEME_COLOR = '#0ea5b7';
 const APP_THEME_DARK = '#073b46';
